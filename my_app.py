@@ -1,7 +1,8 @@
 import streamlit as st
 import numpy as np
 import joblib
-import pandas as pd # Import pandas
+import pandas as pd 
+import xgboost as xgb
 
 # -------------------- PAGE CONFIG --------------------
 st.set_page_config(
