@@ -64,10 +64,9 @@ if st.button("🔮 Predict Price"):
                                   columns=['carat', 'cut', 'color', 'clarity', 'depth', 'table', 'xyz'])
         try:
             input_transformed = pipeline.transform(input_data)
-            pred = model.predict(input_transformed)[0]
-            if y_scaler is not None:
-                pred = y_scaler.inverse_transform(np.array([[pred]]))[0,0]
-            formatted_price = f"${pred:,.2f}"
+            predicted_log_price = model.predict(input_transformed)[0]
+            predicted_original_price = np.exp(predicted_log_price) - 1
+            formatted_price = f"${predicted_original_price:,.2f}"
             st.success(f"💰 **Estimated Price:** {formatted_price}")
         except Exception as e:
             st.error(f"⚠️ Prediction failed: {e}")
