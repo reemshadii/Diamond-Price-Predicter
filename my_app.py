@@ -2,7 +2,6 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import joblib
-import xgboost as xgb
 
 st.set_page_config(
     page_title="💎 Diamond Price Predictor",
@@ -10,22 +9,16 @@ st.set_page_config(
     layout="centered"
 )
 
-# -------------------- LOAD PIPELINE AND MODEL --------------------
 @st.cache_resource
-def load_models():
-    pipeline = joblib.load("xgboost_pipeline.pkl")  
-    model = xgb.XGBRegressor()
-    model.load_model("diamond_price_xgb_model.json")
-    return pipeline, model
+def load_model():
+    return joblib.load("full_pipeline.pkl")   # preprocessing + xgb
 
-pipeline, model = load_models()
+model = load_model()
 
-# -------------------- APP TITLE --------------------
 st.title("💎 Diamond Price Predictor")
 st.write("Enter the diamond’s features below to estimate its price.")
 st.subheader("Diamond Features")
 
-# -------------------- FEATURE INPUTS --------------------
 col1, col2, col3 = st.columns(3)
 cut = col1.selectbox("Cut", ['Fair', 'Good', 'Very Good', 'Premium', 'Ideal'])
 color = col2.selectbox("Color", ['J', 'I', 'H', 'G', 'F', 'E', 'D'])
@@ -58,22 +51,22 @@ x = numeric_input("X (mm)", "x", 3, 20)
 y = numeric_input("Y (mm)", "y", 3, 20)
 z = numeric_input("Z (mm)", "z", 2, 15)
 
-# -------------------- PREDICTION --------------------
 if st.button("🔮 Predict Price"):
     features = [carat, depth, table, x, y, z]
     if any(v is None for v in features):
         st.error("Please enter valid numeric values for all fields.")
     else:
         xyz = x * y * z
-        input_data = pd.DataFrame([[carat, cut, color, clarity, depth, table, xyz]],
-                                  columns=['carat', 'cut', 'color', 'clarity', 'depth', 'table', 'xyz'])
+
+        input_data = pd.DataFrame(
+            [[carat, cut, color, clarity, depth, table, xyz]],
+            columns=['carat', 'cut', 'color', 'clarity', 'depth', 'table', 'xyz']
+        )
+
         try:
-            # Use full pipeline (preprocessing + XGB) directly
-            full_pipeline = joblib.load("full_pipeline.pkl")  # pipeline ending with XGB
-            predicted_log_price = full_pipeline.predict(input_data)[0]
+            predicted_log_price = model.predict(input_data)[0]
             predicted_price = np.exp(predicted_log_price) - 1
-            formatted_price = f"${predicted_price:,.2f}"
-            st.success(f"💰 **Estimated Price:** {formatted_price}")
+            st.success(f"💰 **Estimated Price:** ${predicted_price:,.2f}")
         except Exception as e:
             st.error(f"⚠️ Prediction failed: {e}")
 
