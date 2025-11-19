@@ -64,11 +64,13 @@ if st.button("🔮 Predict Price"):
         )
 
         try:
-            predicted_log_price = model.predict(input_data)[0]
-            predicted_price = np.exp(predicted_log_price) - 1
-            st.success(f"💰 **Estimated Price:** ${predicted_price:,.2f}")
+            full_pipeline = joblib.load("full_pipeline.pkl")  # pipeline ending with XGB
+            predicted_price = full_pipeline.predict(input_data)[0]
+            formatted_price = f"${predicted_price:,.2f}"
+            st.success(f"💰 **Estimated Price:** {formatted_price}")
         except Exception as e:
             st.error(f"⚠️ Prediction failed: {e}")
+
 
 st.markdown("---")
 st.caption("Built using Streamlit and XGBoost.")
