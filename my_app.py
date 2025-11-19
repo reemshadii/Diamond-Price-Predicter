@@ -1,7 +1,7 @@
 import streamlit as st
 import numpy as np
-import joblib
 import pandas as pd
+import joblib
 import xgboost as xgb
 
 st.set_page_config(
@@ -15,9 +15,14 @@ def load_models():
     pipeline = joblib.load("full_pipeline.pkl")
     xgb_model = xgb.XGBRegressor()
     xgb_model.load_model("model.json")
-    return pipeline, xgb_model
+    # Load target scaler if you used one
+    try:
+        y_scaler = joblib.load("target_scaler.pkl")
+    except:
+        y_scaler = None
+    return pipeline, xgb_model, y_scaler
 
-pipeline, model = load_models()
+pipeline, model, y_scaler = load_models()
 
 st.title("💎 Diamond Price Predictor")
 st.write("Enter the diamond’s features below to estimate its price.")
@@ -59,8 +64,10 @@ if st.button("🔮 Predict Price"):
                                   columns=['carat', 'cut', 'color', 'clarity', 'depth', 'table', 'xyz'])
         try:
             input_transformed = pipeline.transform(input_data)
-            prediction = model.predict(input_transformed)[0]
-            formatted_price = f"${prediction:,.2f}"
+            pred = model.predict(input_transformed)[0]
+            if y_scaler is not None:
+                pred = y_scaler.inverse_transform(np.array([[pred]]))[0,0]
+            formatted_price = f"${pred:,.2f}"
             st.success(f"💰 **Estimated Price:** {formatted_price}")
         except Exception as e:
             st.error(f"⚠️ Prediction failed: {e}")
