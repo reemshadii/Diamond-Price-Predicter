@@ -16,8 +16,9 @@ st.set_page_config(
 def load_models():
     pipeline = joblib.load("xgboost_pipeline.pkl")
     xgb_model = xgb.XGBRegressor()
-    xgb_model.load_model("diamond_price_xbg_model.json")
+    xgb_model.load_model("diamond_price_xgb_model.json")
     return pipeline, xgb_model
+pipeline, model = load_models() 
 
 # -------------------- TITLE --------------------
 st.title("💎 Diamond Price Predictor")
