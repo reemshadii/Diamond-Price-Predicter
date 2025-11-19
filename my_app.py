@@ -46,12 +46,12 @@ def numeric_input(label, key, min_val=None, max_val=None):
         st.warning(f"⚠️ Please enter a valid number for {label}")
         return None
 
-carat = numeric_input("Carat", "carat", 0.1, 5.0)
-depth = numeric_input("Depth", "depth", 50, 70)
-table = numeric_input("Table", "table", 50, 70)
-x = numeric_input("X (mm)", "x", 3, 20)
-y = numeric_input("Y (mm)", "y", 3, 20)
-z = numeric_input("Z (mm)", "z", 2, 15)
+carat = numeric_input("Carat", "carat")
+depth = numeric_input("Depth", "depth")
+table = numeric_input("Table", "table")
+x = numeric_input("X (mm)", "x")
+y = numeric_input("Y (mm)", "y")
+z = numeric_input("Z (mm)", "z")
 
 if st.button("🔮 Predict Price"):
     features = [carat, depth, table, x, y, z]
