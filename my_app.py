@@ -70,6 +70,8 @@ if st.button("🔮 Predict Price"):
             st.success(f"💰 **Estimated Price:** {formatted_price}")
         except Exception as e:
             st.error(f"⚠️ Prediction failed: {e}")
+st.write("Transformed features:", input_transformed)
+
 
 st.markdown("---")
 st.caption("Built using Streamlit and XGBoost.")
