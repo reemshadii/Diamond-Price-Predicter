@@ -68,13 +68,10 @@ if st.button("🔮 Predict Price"):
         input_data = pd.DataFrame([[carat, cut, color, clarity, depth, table, xyz]],
                                   columns=['carat', 'cut', 'color', 'clarity', 'depth', 'table', 'xyz'])
         try:
-            # Transform input using pipeline
-            input_transformed = pipeline.transform(input_data)
-
-            # Predict log-price and convert back to original price
-            predicted_log_price = model.predict(input_transformed)[0]
+            # Use full pipeline (preprocessing + XGB) directly
+            full_pipeline = joblib.load("full_pipeline.pkl")  # pipeline ending with XGB
+            predicted_log_price = full_pipeline.predict(input_data)[0]
             predicted_price = np.exp(predicted_log_price) - 1
-
             formatted_price = f"${predicted_price:,.2f}"
             st.success(f"💰 **Estimated Price:** {formatted_price}")
         except Exception as e:
