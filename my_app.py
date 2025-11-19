@@ -10,10 +10,10 @@ st.set_page_config(
     layout="centered"
 )
 
-# -------------------- LOAD MODEL AND PIPELINE --------------------
+# -------------------- LOAD PIPELINE AND MODEL --------------------
 @st.cache_resource
 def load_models():
-    pipeline = joblib.load("xgboost_pipeline.pkl")  # full preprocessing pipeline
+    pipeline = joblib.load("xgboost_pipeline.pkl")  
     model = xgb.XGBRegressor()
     model.load_model("diamond_price_xgb_model.json")
     return pipeline, model
@@ -68,11 +68,13 @@ if st.button("🔮 Predict Price"):
         input_data = pd.DataFrame([[carat, cut, color, clarity, depth, table, xyz]],
                                   columns=['carat', 'cut', 'color', 'clarity', 'depth', 'table', 'xyz'])
         try:
-            # Transform input with pipeline
+            # Transform input using pipeline
             input_transformed = pipeline.transform(input_data)
-            # Predict log-price and convert back to original scale
+
+            # Predict log-price and convert back to original price
             predicted_log_price = model.predict(input_transformed)[0]
             predicted_price = np.exp(predicted_log_price) - 1
+
             formatted_price = f"${predicted_price:,.2f}"
             st.success(f"💰 **Estimated Price:** {formatted_price}")
         except Exception as e:
