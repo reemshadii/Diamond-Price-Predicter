@@ -4,7 +4,7 @@ import numpy as np
 import joblib
 
 st.set_page_config(
-    page_title="💎 Diamond Price Predictor",
+    page_title="Diamond Price Predictor",
     page_icon="💎",
     layout="centered"
 )
@@ -63,7 +63,7 @@ y = numeric_input("Y (mm)", "y", 3, 20)
 z = numeric_input("Z (mm)", "z", 2, 15)
 
 # -------------------- PREDICTION --------------------
-if st.button("🔮 Predict Price"):
+if st.button("Predict Price"):
     features = [carat, depth, table, x, y, z]
 
     if any(v is None for v in features):
