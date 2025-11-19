@@ -11,7 +11,7 @@ st.set_page_config(
 
 @st.cache_resource
 def load_model():
-    return joblib.load("full_pipeline.pkl")   # preprocessing + model
+    return joblib.load("full_pipeline.pkl")   # preprocessing + xgb
 
 model = load_model()
 
@@ -26,11 +26,10 @@ clarity = col3.selectbox("Clarity", ['I1', 'SI2', 'SI1', 'VS2', 'VS1', 'VVS2', '
 
 st.markdown("---")
 
-# ✅ FIXED numeric input
-def numeric_input(label, key, min_value=None, max_value=None):
+def numeric_input(label, key):
     col_input, col_clear = st.columns([4, 1])
 
-    # textbox for entering numbers
+    # text box
     val = col_input.text_input(label, key=key, placeholder="Enter a number")
 
     # clear button
@@ -38,26 +37,17 @@ def numeric_input(label, key, min_value=None, max_value=None):
         st.session_state[key] = ""
         st.rerun()
 
-    # empty handling
+    # handle empty string
     if val == "":
         return None
 
-    # validation
     try:
-        fval = float(val)
-        if min_value is not None and fval < min_value:
-            st.warning(f"⚠️ {label} must be ≥ {min_value}")
-            return None
-        if max_value is not None and fval > max_value:
-            st.warning(f"⚠️ {label} must be ≤ {max_value}")
-            return None
-        return fval
+        return float(val)
     except:
         st.warning(f"⚠️ Please enter a valid number for {label}")
         return None
 
 
-# numeric fields
 carat = numeric_input("Carat", "carat", 0.1, 5.0)
 depth = numeric_input("Depth", "depth", 50, 70)
 table = numeric_input("Table", "table", 50, 70)
@@ -65,7 +55,6 @@ x = numeric_input("X (mm)", "x", 3, 20)
 y = numeric_input("Y (mm)", "y", 3, 20)
 z = numeric_input("Z (mm)", "z", 2, 15)
 
-# prediction
 if st.button("🔮 Predict Price"):
     features = [carat, depth, table, x, y, z]
     if any(v is None for v in features):
@@ -79,11 +68,13 @@ if st.button("🔮 Predict Price"):
         )
 
         try:
-            predicted_price = model.predict(input_data)[0]
+            full_pipeline = joblib.load("full_pipeline.pkl")  # pipeline ending with XGB
+            predicted_price = full_pipeline.predict(input_data)[0]
             formatted_price = f"${predicted_price:,.2f}"
             st.success(f"💰 **Estimated Price:** {formatted_price}")
         except Exception as e:
             st.error(f"⚠️ Prediction failed: {e}")
+
 
 st.markdown("---")
 st.caption("Built using Streamlit and XGBoost.")
