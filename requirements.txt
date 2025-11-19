@@ -3,3 +3,4 @@ numpy
 joblib
 streamlit
 dill
+xgboost==1.7.6
