@@ -26,23 +26,27 @@ clarity = col3.selectbox("Clarity", ['I1', 'SI2', 'SI1', 'VS2', 'VS1', 'VVS2', '
 
 st.markdown("---")
 
-def numeric_input(label, key, min_val=None, max_val=None):
-    val = st.text_input(label, key=key, placeholder="Enter a number")
-    clear = st.button("✕", key=f"clear_{key}")
-    if clear:
+def numeric_input(label, key):
+    col_input, col_clear = st.columns([4, 1])
+
+    # text box
+    val = col_input.text_input(label, key=key, placeholder="Enter a number")
+
+    # clear button
+    if col_clear.button("✕", key=f"clear_{key}"):
         st.session_state[key] = ""
         st.rerun()
-    if val.strip() == "":
+
+    # handle empty string
+    if val == "":
         return None
+
     try:
-        val = float(val)
-        if (min_val is not None and val < min_val) or (max_val is not None and val > max_val):
-            st.warning(f"⚠️ {label} should be between {min_val} and {max_val}")
-            return None
-        return val
-    except ValueError:
+        return float(val)
+    except:
         st.warning(f"⚠️ Please enter a valid number for {label}")
         return None
+
 
 carat = numeric_input("Carat", "carat", 0.1, 5.0)
 depth = numeric_input("Depth", "depth", 50, 70)
