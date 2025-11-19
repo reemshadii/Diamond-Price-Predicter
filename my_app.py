@@ -1,7 +1,8 @@
 import streamlit as st
 import numpy as np
 import joblib
-import pandas as pd 
+import pandas as pd
+import xgboost as xgb
 
 st.set_page_config(
     page_title="💎 Diamond Price Predictor",
@@ -10,12 +11,13 @@ st.set_page_config(
 )
 
 @st.cache_resource
-def load_model():
-    # Load the full pipeline
-    model = joblib.load("full_pipeline.pkl")
-    return model
+def load_models():
+    pipeline = joblib.load("full_pipeline.pkl")
+    xgb_model = xgb.XGBRegressor()
+    xgb_model.load_model("model.json")
+    return pipeline, xgb_model
 
-model = load_model()
+pipeline, model = load_models()
 
 st.title("💎 Diamond Price Predictor")
 st.write("Enter the diamond’s features below to estimate its price.")
@@ -23,7 +25,7 @@ st.subheader("Diamond Features")
 col1, col2, col3 = st.columns(3)
 cut = col1.selectbox("Cut", ['Premium', 'Good', 'Very Good', 'Ideal', 'Fair'])
 color = col2.selectbox("Color", ['G', 'H', 'F', 'J', 'D', 'I', 'E'])
-clarity = col3.selectbox("Clarity", ['VS2', 'VVS2', 'SI2', 'VS1', 'SI1', 'VVS2', 'VVS1', 'IF', 'I1'])
+clarity = col3.selectbox("Clarity", ['VS2', 'VVS2', 'SI2', 'VS1', 'SI1', 'VVS1', 'IF', 'I1'])
 st.markdown("---")
 
 def numeric_input(label, key):
@@ -49,7 +51,6 @@ z = numeric_input("Z", "z")
 
 if st.button("🔮 Predict Price"):
     features = [carat, depth, table, x, y, z]
-
     if any(v is None for v in features):
         st.error("Please enter valid numeric values for all fields.")
     else:
@@ -57,10 +58,12 @@ if st.button("🔮 Predict Price"):
         input_data = pd.DataFrame([[carat, cut, color, clarity, depth, table, xyz]],
                                   columns=['carat', 'cut', 'color', 'clarity', 'depth', 'table', 'xyz'])
         try:
-            prediction = model.predict(input_data)[0]
+            input_transformed = pipeline.transform(input_data)
+            prediction = model.predict(input_transformed)[0]
             formatted_price = f"${prediction:,.2f}"
             st.success(f"💰 **Estimated Price:** {formatted_price}")
         except Exception as e:
             st.error(f"⚠️ Prediction failed: {e}")
+
 st.markdown("---")
 st.caption("Built using Streamlit and XGBoost.")
