@@ -82,7 +82,5 @@ elif st.session_state.page == "about":
     **Simple & Fast:** Just enter a few details about your diamond and get an instant, dependable price estimate.
     """)
 
-    """)
-
     st.markdown("---")
     st.caption("Built using Streamlit and XGBoost.")
