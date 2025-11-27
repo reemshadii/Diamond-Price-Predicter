@@ -13,13 +13,8 @@ model = load_model()
 if 'page' not in st.session_state:
     st.session_state.page = 'home'
 
-menu_col1, menu_col2, menu_col3 = st.columns([1, 1, 8])
-with menu_col1:
-    if st.button("**Home**"):
-        st.session_state.page = "home"
-with menu_col2:
-    if st.button("**About**"):
-        st.session_state.page = "about"
+page = st.radio("", ["Home", "About"], index=0, horizontal=True)
+st.session_state.page = page.lower()
 
 if st.session_state.page == "home":
     st.title("💎 Diamond Price Predictor")
@@ -77,7 +72,7 @@ if st.session_state.page == "home":
     st.caption("Built using Streamlit and XGBoost.")
 
 elif st.session_state.page == "about":
-    st.title("ℹ️ About This App")
+    st.title("About This App")
     st.write("""
     This Diamond Price Predictor app uses an XGBoost model to estimate the price of a diamond 
     based on its features such as carat, cut, color, clarity, and dimensions. 
