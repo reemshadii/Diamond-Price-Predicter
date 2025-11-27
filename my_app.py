@@ -74,15 +74,12 @@ if st.session_state.page == "home":
 elif st.session_state.page == "about":
     st.title("About This App")
     st.write("""
-    This Diamond Price Predictor app uses an XGBoost model to estimate the price of a diamond 
-    based on its features such as carat, cut, color, clarity, and dimensions. 
-
-    The app is built with Streamlit for quick and interactive predictions. 
-
-    Features:
-    - Numerical input for carat, depth, table, and dimensions (x, y, z)
-    - Categorical input for cut, color, and clarity
-    - Real-time price prediction using a pre-trained model
+    ## Get fast, reliable diamond price estimates in just a few clicks:
+    **Clean, Trusted Data:** Predictions are based on a carefully analyzed diamond dataset.  
+    **Smart Insights:** The system understands the key features that determine value.  
+    **Proven Accuracy:** Our AI model delivers highly precise estimates, even for diamonds not in the training set.  
+    **Quick & Simple:** Just enter a few diamond details and get an instant price prediction.
     """)
+
     st.markdown("---")
     st.caption("Built using Streamlit and XGBoost.")
