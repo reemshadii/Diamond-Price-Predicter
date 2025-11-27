@@ -19,7 +19,27 @@ model = load_model()
 # -------------------- APP TITLE --------------------
 st.title("💎 Diamond Price Predictor")
 st.write("Enter the diamond’s features below to estimate its price.")
-st.subheader("Diamond Features")
+st.markdown(
+    """
+    <style>
+    /* Text input boxes */
+    div.stTextInput > div > input {
+        background-color: #667cf9;
+        color: white;
+        border-radius: 5px;
+        padding: 5px;
+    }
+    /* Select boxes */
+    div.stSelectbox > div > div > div[role="button"] {
+        background-color: #667cf9;
+        color: white;
+        border-radius: 5px;
+        padding: 5px;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
 
 # -------------------- CATEGORICAL INPUTS --------------------
 col1, col2, col3 = st.columns(3)
