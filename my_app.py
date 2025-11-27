@@ -72,9 +72,9 @@ if st.session_state.page == "home":
     st.caption("Built using Streamlit and XGBoost.")
 
 elif st.session_state.page == "about":
-    st.title("About This App")
+    st.title("About Lumière")
     st.write("""
-    #### This application offers a smart and reliable way to predict diamond prices:
+    #### We offer you a smart and reliable way to predict diamond prices:
     **Built on Solid Data:** We've thoroughly cleaned and analyzed a vast dataset of diamonds to ensure our predictions are based on the most reliable information.  
     **Intelligent Insights:** Our system understands the key characteristics that drive diamond value, allowing for highly informed price estimates.  
     **Proven Accuracy & Highly Trustworthy Estimates:** Powered by a top-tier AI model (XGBoost Regressor), our predictor has been rigorously tested and consistently delivers exceptional precision, achieving over 99% accuracy even on diamonds it hasn't seen before.  
