@@ -8,7 +8,17 @@ st.set_page_config(
     page_icon="💎",
     layout="centered"
 )
-
+st.markdown(
+    """
+    <style>
+    /* Change the page background */
+    .stApp {
+        background-color: #dcdff9;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
 @st.cache_resource
 def load_model():
     return joblib.load("full_pipeline.pkl") 
@@ -16,17 +26,6 @@ def load_model():
 model = load_model()
 st.title("💎 Diamond Price Predictor")
 st.write("Enter the diamond’s features below to estimate its price.")
-st.markdown(
-    """
-    <style>
-    /* Apply color to all text on the page */
-    body, div, span, p, h1, h2, h3, h4, h5, h6, label {
-        color: #667cf9 !important;
-    }
-    </style>
-    """,
-    unsafe_allow_html=True
-)
 
 # inputs 
 col1, col2, col3 = st.columns(3)
