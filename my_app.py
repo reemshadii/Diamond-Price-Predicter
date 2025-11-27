@@ -22,24 +22,30 @@ st.write("Enter the diamond’s features below to estimate its price.")
 st.markdown(
     """
     <style>
-    /* Text input boxes */
-    div.stTextInput > div > input {
-        background-color: #667cf9;
-        color: white;
-        border-radius: 5px;
-        padding: 5px;
+    /* Text input fields */
+    input[type="text"] {
+        background-color: #667cf9 !important;
+        color: white !important;
+        border-radius: 5px !important;
+        padding: 5px !important;
     }
+    
     /* Select boxes */
-    div.stSelectbox > div > div > div[role="button"] {
-        background-color: #667cf9;
-        color: white;
-        border-radius: 5px;
-        padding: 5px;
+    div[role="listbox"] {
+        background-color: #667cf9 !important;
+        color: white !important;
+        border-radius: 5px !important;
+    }
+
+    /* Placeholder text color */
+    ::placeholder {
+        color: #e0e0e0 !important;
     }
     </style>
     """,
     unsafe_allow_html=True
 )
+
 
 # -------------------- CATEGORICAL INPUTS --------------------
 col1, col2, col3 = st.columns(3)
