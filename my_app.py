@@ -74,7 +74,7 @@ if st.session_state.page == "home":
 elif st.session_state.page == "about":
     st.title("About This App")
     st.write("""
-    ## Get fast, reliable diamond price estimates in just a few clicks:
+    #### Get fast, reliable diamond price estimates in just a few clicks:
     **Clean, Trusted Data:** Predictions are based on a carefully analyzed diamond dataset.  
     **Smart Insights:** The system understands the key features that determine value.  
     **Proven Accuracy:** Our AI model delivers highly precise estimates, even for diamonds not in the training set.  
