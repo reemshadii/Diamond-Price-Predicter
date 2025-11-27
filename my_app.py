@@ -9,45 +9,26 @@ st.set_page_config(
     layout="centered"
 )
 
-# -------------------- LOAD FULL PIPELINE --------------------
 @st.cache_resource
 def load_model():
-    return joblib.load("full_pipeline.pkl")   # preprocessing + xgb model
+    return joblib.load("full_pipeline.pkl") 
 
 model = load_model()
-
-# -------------------- APP TITLE --------------------
 st.title("💎 Diamond Price Predictor")
 st.write("Enter the diamond’s features below to estimate its price.")
 st.markdown(
     """
     <style>
-    /* Text input fields */
-    input[type="text"] {
-        background-color: #667cf9 !important;
-        color: white !important;
-        border-radius: 5px !important;
-        padding: 5px !important;
-    }
-    
-    /* Select boxes */
-    div[role="listbox"] {
-        background-color: #667cf9 !important;
-        color: white !important;
-        border-radius: 5px !important;
-    }
-
-    /* Placeholder text color */
-    ::placeholder {
-        color: #e0e0e0 !important;
+    /* Apply color to all text on the page */
+    body, div, span, p, h1, h2, h3, h4, h5, h6, label {
+        color: #667cf9 !important;
     }
     </style>
     """,
     unsafe_allow_html=True
 )
 
-
-# -------------------- CATEGORICAL INPUTS --------------------
+# inputs 
 col1, col2, col3 = st.columns(3)
 cut = col1.selectbox("Cut", ['Fair', 'Good', 'Very Good', 'Premium', 'Ideal'])
 color = col2.selectbox("Color", ['J', 'I', 'H', 'G', 'F', 'E', 'D'])
@@ -55,32 +36,23 @@ clarity = col3.selectbox("Clarity", ['I1', 'SI2', 'SI1', 'VS2', 'VS1', 'VVS2', '
 
 st.markdown("---")
 
-# -------------------- NUMERIC INPUT (NO CLEAR BUTTON) --------------------
 def numeric_input(label, key, min_value=None, max_value=None):
-
     val = st.text_input(label, key=key, placeholder="Enter a number")
-
     if val.strip() == "":
         return None
-
     try:
         fval = float(val)
-
         if min_value is not None and fval < min_value:
             st.warning(f"{label} must be ≥ {min_value}")
             return None
-
         if max_value is not None and fval > max_value:
             st.warning(f"{label} must be ≤ {max_value}")
             return None
-
         return fval
-
     except:
         st.warning(f"Enter a valid number for {label}")
         return None
 
-# -------------------- NUMERIC FIELDS --------------------
 carat = numeric_input("Carat", "carat", 0.1, 5.0)
 depth = numeric_input("Depth", "depth", 50, 70)
 table = numeric_input("Table", "table", 50, 70)
@@ -88,28 +60,23 @@ x = numeric_input("X (mm)", "x", 3, 20)
 y = numeric_input("Y (mm)", "y", 3, 20)
 z = numeric_input("Z (mm)", "z", 2, 15)
 
-# -------------------- PREDICTION --------------------
+# predict
 if st.button("Predict Price"):
     features = [carat, depth, table, x, y, z]
-
     if any(v is None for v in features):
         st.error("Please enter valid numeric values for all fields.")
     else:
-
         xyz = x * y * z
-
         input_data = pd.DataFrame(
             [[carat, cut, color, clarity, depth, table, xyz]],
             columns=['carat', 'cut', 'color', 'clarity', 'depth', 'table', 'xyz']
         )
-
         try:
             predicted_price = model.predict(input_data)[0]
             formatted_price = f"${predicted_price:,.2f}"
             st.success(f"💰 **Estimated Price:** {formatted_price}")
-
         except Exception as e:
             st.error(f"⚠️ Prediction failed: {e}")
-
+            
 st.markdown("---")
 st.caption("Built using Streamlit and XGBoost.")
