@@ -77,8 +77,7 @@ elif st.session_state.page == "about":
     #### This application offers a smart and reliable way to predict diamond prices:
     **Built on Solid Data:** We've thoroughly cleaned and analyzed a vast dataset of diamonds to ensure our predictions are based on the most reliable information.  
     **Intelligent Insights:** Our system understands the key characteristics that drive diamond value, allowing for highly informed price estimates.  
-    **Proven Accuracy:** Powered by a top-tier AI model (XGBoost Regressor), our predictor has been rigorously tested and consistently delivers exceptional precision.  
-    **Highly Trustworthy Estimates:** Expect precise price predictions, with our model achieving over 99% accuracy on diamonds it hasn't seen before.  
+    **Proven Accuracy & Highly Trustworthy Estimates:** Powered by a top-tier AI model (XGBoost Regressor), our predictor has been rigorously tested and consistently delivers exceptional precision, achieving over 99% accuracy even on diamonds it hasn't seen before.  
     **Simple & Fast:** Just enter a few details about your diamond and get an instant, dependable price estimate.
     """)
 
