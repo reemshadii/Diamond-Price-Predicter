@@ -3,28 +3,25 @@ import pandas as pd
 import numpy as np
 import joblib
 
-st.set_page_config(
-    page_title="Diamond Price Predictor",
-    page_icon="💎",
-    layout="centered"
-)
+st.set_page_config(page_title="Diamond Price Predictor", page_icon="💎", layout="centered")
 
-if "page" not in st.session_state:
-    st.session_state.page = "home"
+@st.cache_resource
+def load_model():
+    return joblib.load("full_pipeline.pkl") 
 
-col1, col2 = st.columns([1, 6])
-with col1:
+model = load_model()
+if 'page' not in st.session_state:
+    st.session_state.page = 'home'
+
+menu_col1, menu_col2, menu_col3 = st.columns([1, 1, 8])
+with menu_col1:
     if st.button("**Home**"):
         st.session_state.page = "home"
+with menu_col2:
     if st.button("**About**"):
         st.session_state.page = "about"
 
 if st.session_state.page == "home":
-    @st.cache_resource
-    def load_model():
-        return joblib.load("full_pipeline.pkl") 
-
-    model = load_model()
     st.title("💎 Diamond Price Predictor")
     st.write("Enter the diamond’s features below to estimate its price.")
 
@@ -75,17 +72,22 @@ if st.session_state.page == "home":
                 st.success(f"💰 **Estimated Price:** {formatted_price}")
             except Exception as e:
                 st.error(f"⚠️ Prediction failed: {e}")
-                
+
     st.markdown("---")
     st.caption("Built using Streamlit and XGBoost.")
 
 elif st.session_state.page == "about":
     st.title("ℹ️ About This App")
     st.write("""
-    This Diamond Price Predictor app was built using **Streamlit** and **XGBoost**.
+    This Diamond Price Predictor app uses an XGBoost model to estimate the price of a diamond 
+    based on its features such as carat, cut, color, clarity, and dimensions. 
+
+    The app is built with Streamlit for quick and interactive predictions. 
 
     Features:
-    - Predict diamond prices based on multiple attributes
-    - Easy-to-use interface
-    - Future enhancements include interactive charts and more models
+    - Numerical input for carat, depth, table, and dimensions (x, y, z)
+    - Categorical input for cut, color, and clarity
+    - Real-time price prediction using a pre-trained model
     """)
+    st.markdown("---")
+    st.caption("Built using Streamlit and XGBoost.")
